@@ -23,6 +23,10 @@
 
 	var BACKROUND_WIDTH = 1000;
 
+	var NANONAUT_NR_FRAMES_PER_ROW = 5;
+
+	var MANONAUT_NR_ANIMATION_FRAMES = 7;
+
 	// SETUP
 	var canvas = document.createElement('canvas');
 	var c = canvas.getContext('2d');
@@ -31,15 +35,17 @@
 	document.body.appendChild(canvas);
 
 	var nanonautImage = new Image();
-	nanonautImage.src = 'nanonaut.png';
+	nanonautImage.src = 'animatedNanonaut.png';
 
 	var nanonautX = CANVAS_WIDTH / 2;
 	var nanonautY = GROUND_Y - NANONAUT_HEIGHT;
 	var nanonautYSpeed = 0;
 	var spaceKeyisPressed = false;
 	var nanonautIsInTheAir = false;
+	var nanonautFrameNr = 0;
 	var cameraX = 0
 	var cameraY = 0
+	
 
 
 	var backgroundImage = new Image();
@@ -93,6 +99,11 @@
 		// update camera
 		cameraX = nanonautX - 150;
 
+		// update animation
+		nanonautFrameNr = nanonautFrameNr + 1;
+		if (nanonautFrameNr >= MANONAUT_NR_ANIMATION_FRAMES){
+			nanonautFrameNr = 0;
+		}													
 
 		if (spaceKeyisPressed){
 			nanonautYSpeed = -NANONAUT_JUMP_SPEED;
@@ -135,7 +146,14 @@
 		c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
 
 		//draw the nanonaut
-		c.drawImage(nanonautImage, nanonautX - cameraX, nanonautY - cameraY);
+		var nanonautSpriteSheetRow = Math.floor(nanonautFrameNr / NANONAUT_NR_FRAMES_PER_ROW);
+		var nanonautSpriteSheetColumn = nanonautFrameNr % NANONAUT_NR_FRAMES_PER_ROW;
+		var nanonautSpriteSheetX = nanonautSpriteSheetColumn * NANONAUT_WIDTH;
+		var nanonautSpriteSheetY = nanonautSpriteSheetRow * NANONAUT_HEIGHT;
+		c.drawImage(nanonautImage, nanonautSpriteSheetX, nanonautSpriteSheetY, NANONAUT_WIDTH, NANONAUT_HEIGHT,
+			nanonautX - cameraX, nanonautY - cameraY, NANONAUT_WIDTH, NANONAUT_HEIGHT);
+
+
 
 
 	}
